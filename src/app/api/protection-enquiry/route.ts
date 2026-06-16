@@ -204,11 +204,14 @@ export async function POST(request: Request) {
       firstName: data.name,
     });
 
-    // Submit to Supabase CRM
+    // Submit to Supabase CRM (protection = insurance, not a mortgage enquiry).
+    // isNonMortgageLead → no fabricated mortgage figures are sent.
     const supabaseResult = await submitLeadToSupabase({
       name: data.name,
       email: data.email,
       phone: data.phone,
+      isNonMortgageLead: true,
+      submissionType: "protection-enquiry",
       // UTM tracking from client
       utmSource: data.utmSource,
       utmMedium: data.utmMedium,

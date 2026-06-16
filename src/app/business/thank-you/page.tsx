@@ -107,16 +107,16 @@ function ThankYouContent() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              You're All Set — Here's What Happens Next
+              Thanks — your registration has been received
             </motion.h1>
 
             <motion.p
-              className="text-lg text-navy/70 mb-6"
+              className="text-lg text-navy/70 mb-6 max-w-xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
-              We'll have your employee benefit live within 24 hours.
+              We'll contact you shortly to set up your staff link, QR code and launch materials.
             </motion.p>
 
             {/* Reference Number */}

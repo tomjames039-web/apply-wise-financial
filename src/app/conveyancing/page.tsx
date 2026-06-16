@@ -7,6 +7,33 @@ import { Footer } from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollAnimation } from "@/components/ui/scroll-animation";
 
+// Analytics globals
+declare global {
+  interface Window {
+    gtag?: (cmd: string, event: string, params?: Record<string, string | number>) => void;
+    fbq?: (cmd: string, event: string, params?: Record<string, string | number>) => void;
+  }
+}
+
+const SORTREFER_QUOTE_URL = "https://quote.sortrefer.co.uk/MTc5ODc=";
+
+// Conveyancing has no contact capture (it redirects to SortRefer), so we track
+// interest as an analytics event rather than creating an empty CRM lead.
+function trackConveyancingQuoteClick(location: string) {
+  if (typeof window === "undefined") return;
+  const params = {
+    event_category: "conveyancing",
+    event_label: location,
+    destination: "sortrefer",
+  };
+  if (window.gtag) {
+    window.gtag("event", "conveyancing_quote_click", params);
+  }
+  if (window.fbq) {
+    window.fbq("trackCustom", "ConveyancingQuoteClick", params);
+  }
+}
+
 const conveyancingTypes = [
   {
     title: "Sale & Purchase",
@@ -157,9 +184,10 @@ export default function ConveyancingPage() {
               transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
             >
               <a
-                href="https://quote.sortrefer.co.uk/MTc5ODc="
+                href={SORTREFER_QUOTE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackConveyancingQuoteClick("hero")}
               >
                 <motion.button
                   className="relative px-10 py-4 bg-gold text-navy font-semibold text-lg rounded-lg hover:bg-gold/90 transition-all shadow-lg shadow-gold/20"
@@ -292,9 +320,10 @@ export default function ConveyancingPage() {
           <ScrollAnimation delay={0.4}>
             <div className="text-center mt-12">
               <a
-                href="https://quote.sortrefer.co.uk/MTc5ODc="
+                href={SORTREFER_QUOTE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackConveyancingQuoteClick("how-it-works")}
               >
                 <motion.button
                   className="px-10 py-4 bg-navy text-white font-semibold rounded-lg hover:bg-navy-deep transition-all"
@@ -361,9 +390,10 @@ export default function ConveyancingPage() {
               Get your instant fixed-fee conveyancing quote in minutes
             </p>
             <a
-              href="https://quote.sortrefer.co.uk/MTc5ODc="
+              href={SORTREFER_QUOTE_URL}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackConveyancingQuoteClick("final-cta")}
             >
               <motion.button
                 className="px-10 py-4 bg-gold text-navy font-semibold text-lg rounded-lg hover:bg-gold/90 transition-all shadow-lg shadow-gold/20"

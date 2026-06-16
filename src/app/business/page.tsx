@@ -116,6 +116,9 @@ function BusinessPageContent() {
     companyName: "",
     email: "",
     phone: "",
+    employeeCount: "",
+    staffCommsMethod: "",
+    message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -167,9 +170,12 @@ function BusinessPageContent() {
           businessName: formData.companyName,
           email: formData.email,
           phone: formData.phone,
-          employees: "not-specified",
+          employeeCount: formData.employeeCount || "not-specified",
+          staffCommsMethod: formData.staffCommsMethod || "",
+          message: formData.message || "",
           businessType: "Employer Benefits Registration",
           source: "employer_benefits_page",
+          sourceUrl: typeof window !== "undefined" ? window.location.href : "",
           leadType: "employer_contact",
           ...utmParams,
           referrer,
@@ -199,7 +205,9 @@ function BusinessPageContent() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -661,7 +669,7 @@ function BusinessPageContent() {
                   htmlFor="phone"
                   className="block text-sm font-medium text-white/70 mb-1.5"
                 >
-                  Phone (Optional)
+                  Phone
                 </label>
                 <input
                   type="tel"
@@ -669,8 +677,71 @@ function BusinessPageContent() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
+                  required
                   className="w-full px-4 py-3 rounded-lg bg-navy-deep border border-gold/20 text-white placeholder-white/30 focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-all"
                   placeholder="07123 456789"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="employeeCount"
+                  className="block text-sm font-medium text-white/70 mb-1.5"
+                >
+                  Approximate number of employees
+                </label>
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  min={1}
+                  step={1}
+                  id="employeeCount"
+                  name="employeeCount"
+                  value={formData.employeeCount}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-lg bg-navy-deep border border-gold/20 text-white placeholder-white/30 focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-all"
+                  placeholder="e.g. 25"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="staffCommsMethod"
+                  className="block text-sm font-medium text-white/70 mb-1.5"
+                >
+                  Preferred way to share with staff
+                </label>
+                <select
+                  id="staffCommsMethod"
+                  name="staffCommsMethod"
+                  value={formData.staffCommsMethod}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-lg bg-navy-deep border border-gold/20 text-white focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-all"
+                >
+                  <option value="">Please select…</option>
+                  <option value="Email">Email</option>
+                  <option value="WhatsApp">WhatsApp</option>
+                  <option value="Noticeboard">Noticeboard</option>
+                  <option value="Payslip insert">Payslip insert</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium text-white/70 mb-1.5"
+                >
+                  Message <span className="text-white/40">(optional)</span>
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows={3}
+                  className="w-full px-4 py-3 rounded-lg bg-navy-deep border border-gold/20 text-white placeholder-white/30 focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-all resize-none"
+                  placeholder="Anything you'd like us to know?"
                 />
               </div>
 

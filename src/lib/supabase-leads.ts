@@ -5,22 +5,33 @@
 
 const SUPABASE_ENDPOINT = "https://xpxdfkjaqzkovmerfhbq.supabase.co/functions/v1/submit-lead";
 
-// Interface for the Supabase lead payload - using exact enum values required
+// Interface for the Supabase lead payload (central submit-lead contract).
+// mortgage/postcode are optional so non-mortgage forms (employer, contact)
+// can submit without fabricating values. leadSource is the full domain and
+// submissionType tags the form type.
 export interface SupabaseLeadPayload {
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
-  postcode: string;
-  mortgageAmount: number; // MUST be integer
-  householdIncome: number; // MUST be integer
-  mortgageEnd: "within-30-days" | "1-3-months" | "3-6-months" | "over-6-months" | "already-ended";
-  secureRate: "asap" | "not-sure" | "exploring";
-  extraMoney: "no" | "home-improvements" | "clear-debt" | "other";
-  badCredit: "no-issues" | "missed-mortgage" | "missed-personal" | "ccj-defaults";
-  employmentStatus: "employed" | "self-employed" | "retired" | "unemployed";
-  leadSource: "website-organic";
-  submissionType: "form-enquiry";
+  leadSource: string; // full domain, e.g. "apply-wise.co.uk"
+  submissionType: string; // e.g. "employer-benefits", "mortgage-enquiry"
+  // Mortgage-specific (only sent for mortgage flows)
+  postcode?: string;
+  mortgageAmount?: number; // integer
+  householdIncome?: number; // integer
+  mortgageEnd?: "within-30-days" | "1-3-months" | "3-6-months" | "over-6-months" | "already-ended";
+  secureRate?: "asap" | "not-sure" | "exploring";
+  extraMoney?: "no" | "home-improvements" | "clear-debt" | "other";
+  badCredit?: "no-issues" | "missed-mortgage" | "missed-personal" | "ccj-defaults";
+  employmentStatus?: "employed" | "self-employed" | "retired" | "unemployed";
+  // Employer-benefit specific (only sent for employer-benefits)
+  companyName?: string | null;
+  employeeCount?: number | null;
+  staffCommsMethod?: string | null;
+  notes?: string | null;
+  // Attribution
+  landingPage?: string | null;
   utmSource?: string | null;
   utmMedium?: string | null;
   utmCampaign?: string | null;
@@ -54,11 +65,30 @@ export interface FormLeadData {
   creditIssue?: string;
   callbackTime?: string;
 
+  // Lead routing / attribution
+  leadSource?: string; // full domain, defaults to "apply-wise.co.uk"
+  submissionType?: string; // form-type slug, defaults to "mortgage-enquiry"
+  landingPage?: string | null;
+
   // UTM tracking (passed from client-side)
   utmSource?: string | null;
   utmMedium?: string | null;
   utmCampaign?: string | null;
   referrer?: string | null;
+
+  // Employer benefit lead handling
+  // When true, this is an EMPLOYER registering to offer mortgage advice as a
+  // staff benefit - NOT a mortgage client. We must NOT fabricate mortgage
+  // figures for these leads.
+  isEmployerLead?: boolean;
+  companyName?: string;
+  employeeCount?: string | number;
+  staffCommsMethod?: string;
+  notes?: string;
+
+  // Non-mortgage lead (e.g. protection/insurance, generic contact). Like
+  // employer leads, these must NOT carry fabricated mortgage figures.
+  isNonMortgageLead?: boolean;
 }
 
 // Default values matching the required enum values
@@ -355,6 +385,60 @@ function calculateMortgageAmount(
 export function transformToSupabaseLead(formData: FormLeadData): SupabaseLeadPayload {
   const { firstName, lastName } = parseName(formData.name, formData.firstName, formData.lastName);
 
+  // Every Apply Wise lead is tagged with the full domain (the central system
+  // retired the website-organic auto-fallback). Channel info lives in UTM.
+  const leadSource = formData.leadSource || "apply-wise.co.uk";
+
+  // ===== EMPLOYER BENEFIT LEAD =====
+  // An employer registering to OFFER mortgage advice to their staff is NOT a
+  // mortgage client. Per the central contract we send NO mortgage fields at all
+  // (no mortgageAmount, householdIncome, postcode or funnel answers) - only the
+  // real data the employer provided. The lead is tagged via submissionType.
+  if (formData.isEmployerLead) {
+    const employeeCountInt =
+      formData.employeeCount != null && String(formData.employeeCount).trim() !== ""
+        ? parseNumeric(formData.employeeCount, 0) || null
+        : null;
+
+    return {
+      firstName,
+      lastName,
+      email: formData.email,
+      phone: formData.phone,
+      leadSource,
+      submissionType: "employer-benefits",
+      companyName: formData.companyName || null,
+      employeeCount: employeeCountInt,
+      staffCommsMethod: formData.staffCommsMethod || null,
+      notes: formData.notes || null,
+      landingPage: formData.landingPage || null,
+      utmSource: formData.utmSource || null,
+      utmMedium: formData.utmMedium || null,
+      utmCampaign: formData.utmCampaign || null,
+      referrer: formData.referrer || null,
+    };
+  }
+
+  // ===== NON-MORTGAGE LEAD (protection/insurance, generic contact) =====
+  // No mortgage figures are fabricated - we only send real contact data.
+  if (formData.isNonMortgageLead) {
+    return {
+      firstName,
+      lastName,
+      email: formData.email,
+      phone: formData.phone,
+      leadSource,
+      submissionType: formData.submissionType || "contact-form",
+      notes: formData.notes || null,
+      landingPage: formData.landingPage || null,
+      utmSource: formData.utmSource || null,
+      utmMedium: formData.utmMedium || null,
+      utmCampaign: formData.utmCampaign || null,
+      referrer: formData.referrer || null,
+    };
+  }
+
+  // ===== MORTGAGE / STANDARD LEAD =====
   const mortgageAmount = calculateMortgageAmount(
     formData.propertyValue,
     formData.depositAmount,
@@ -383,8 +467,9 @@ export function transformToSupabaseLead(formData: FormLeadData): SupabaseLeadPay
     extraMoney: mapExtraMoney(formData.extraMoney),
     badCredit: mapCreditToBadCredit(formData.badCredit || formData.creditIssue),
     employmentStatus: mapEmploymentStatus(formData.employmentStatus),
-    leadSource: "website-organic",
-    submissionType: "form-enquiry",
+    leadSource,
+    submissionType: formData.submissionType || "mortgage-enquiry",
+    landingPage: formData.landingPage || null,
     utmSource: formData.utmSource || null,
     utmMedium: formData.utmMedium || null,
     utmCampaign: formData.utmCampaign || null,
