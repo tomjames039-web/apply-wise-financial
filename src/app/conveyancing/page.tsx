@@ -10,7 +10,7 @@ import { ScrollAnimation } from "@/components/ui/scroll-animation";
 // Analytics globals
 declare global {
   interface Window {
-    gtag?: (cmd: string, event: string, params?: Record<string, string | number>) => void;
+    gtag?: (cmd: string, event: string, params: Record<string, string | number>) => void;
     fbq?: (cmd: string, event: string, params?: Record<string, string | number>) => void;
   }
 }

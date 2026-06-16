@@ -141,7 +141,44 @@ async function sendConfirmationEmail(enquiry: {
       from: "Apply Wise <hello@apply-wise.co.uk>",
       to: [enquiry.email],
       replyTo: "info@apply-wise.co.uk",
-      subject: `🎉 Congratulations ${firstName} — you're giving your team a brilliant benefit`,
+      subject: `Your Apply Wise employee benefit is confirmed, ${firstName}`,
+      text: `Hi ${firstName},
+
+Congratulations — ${enquiry.businessName} is now registered for the Apply Wise Employer Mortgage Benefit.
+
+This gives your employees access to mortgage support from an FCA-regulated mortgage adviser, with the standard Apply Wise broker fee waived for eligible employees of registered businesses.
+
+That means your staff could save up to £695 where our standard broker fee would normally apply.
+
+Money worries are one of the biggest sources of stress for employees. By offering this benefit, you are giving your team practical access to clear, professional mortgage support when buying, remortgaging, moving home, reviewing a product transfer, or considering buy-to-let.
+
+What your employees can access:
+- Free initial mortgage review
+- Standard Apply Wise broker fee waived for eligible employees
+- Potential saving of up to £695 where our standard broker fee would normally apply
+- Support with purchases, remortgages, product transfers and buy-to-let
+- Access to a wide range of lenders through Apply Wise
+- Help understanding affordability, credit position and mortgage options
+- No fee for product transfers or insurance advice
+
+What happens next:
+1. We will contact you to confirm a few details about your business and team size.
+2. We will create your employer benefit setup, including a dedicated staff link, QR code and ready-to-share staff materials.
+3. You share the benefit with your team using the materials we provide.
+4. Each month, we will send you a short staff reminder/newsletter to forward to your team, add to your staff WhatsApp group, or place on your noticeboard.
+
+This monthly reminder is important because it ensures your employees know the benefit is available when they need it.
+
+Your reference: ${enquiry.id}
+
+Got a question before we call? Just reply to this email or call us on 01992 535 555.
+
+Speak soon,
+The Apply Wise Team
+
+Apply Wise Financial Limited is an Appointed Representative of Scott & Goose LLP, which is authorised and regulated by the Financial Conduct Authority under Firm Reference Number 661183.
+
+Your home may be repossessed if you do not keep up repayments on your mortgage.`,
       html: `
         <!DOCTYPE html>
         <html>
