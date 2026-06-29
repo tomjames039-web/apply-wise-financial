@@ -185,16 +185,22 @@ export default function CalculatorPage() {
   }) => {
     const percentage = ((value - min) / (max - min)) * 100;
     const sliderRef = useRef<HTMLDivElement>(null);
+    const isDragging = useRef(false);
+    const rafRef = useRef<number | null>(null);
+
+    const calcValue = (clientX: number) => {
+      if (!sliderRef.current) return value;
+      const rect = sliderRef.current.getBoundingClientRect();
+      const percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      const raw = min + percent * (max - min);
+      return Math.max(min, Math.min(max, Math.round(raw / step) * step));
+    };
 
     const handleInteraction = (clientX: number) => {
-      if (!sliderRef.current) return;
-      const rect = sliderRef.current.getBoundingClientRect();
-      const x = clientX - rect.left;
-      const width = rect.width;
-      const percent = Math.max(0, Math.min(1, x / width));
-      const newValue = min + percent * (max - min);
-      const steppedValue = Math.round(newValue / step) * step;
-      onChange(Math.max(min, Math.min(max, steppedValue)));
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        onChange(calcValue(clientX));
+      });
     };
 
     const handleTouchMove = (e: React.TouchEvent) => {
@@ -203,17 +209,20 @@ export default function CalculatorPage() {
     };
 
     const handleTouchStart = (e: React.TouchEvent) => {
+      isDragging.current = true;
       handleInteraction(e.touches[0].clientX);
     };
 
     const handleMouseDown = (e: React.MouseEvent) => {
+      isDragging.current = true;
       handleInteraction(e.clientX);
 
       const handleMouseMove = (e: MouseEvent) => {
-        handleInteraction(e.clientX);
+        if (isDragging.current) handleInteraction(e.clientX);
       };
 
       const handleMouseUp = () => {
+        isDragging.current = false;
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
       };
@@ -236,13 +245,13 @@ export default function CalculatorPage() {
         {/* Track fill */}
         <div
           className="absolute h-2.5 md:h-2 bg-gold rounded-full"
-          style={{ width: `${percentage}%` }}
+          style={{ width: `${percentage}%`, transition: 'width 0.05s linear' }}
         />
 
-        {/* Thumb - larger on mobile for easier touch */}
+        {/* Thumb */}
         <div
-          className="absolute w-10 h-10 md:w-8 md:h-8 bg-gold rounded-full border-4 border-white shadow-lg transform -translate-x-1/2 transition-transform active:scale-110 hover:scale-105"
-          style={{ left: `${percentage}%` }}
+          className="absolute w-10 h-10 md:w-8 md:h-8 bg-gold rounded-full border-4 border-white shadow-lg transform -translate-x-1/2 active:scale-110 hover:scale-105"
+          style={{ left: `${percentage}%`, transition: 'left 0.05s linear, transform 0.15s ease' }}
         />
 
         {/* Hidden input for accessibility */}
