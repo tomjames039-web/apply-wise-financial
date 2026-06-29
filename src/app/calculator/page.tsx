@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Header } from "@/components/Header";
@@ -167,7 +167,7 @@ export default function CalculatorPage() {
     }).format(Number(value));
   };
 
-  // Custom mobile-friendly slider component
+  // Native range slider — smooth, browser-handled drag
   const Slider = ({
     id,
     value,
@@ -183,78 +183,8 @@ export default function CalculatorPage() {
     step: number;
     onChange: (value: number) => void;
   }) => {
-    const percentage = ((value - min) / (max - min)) * 100;
-    const sliderRef = useRef<HTMLDivElement>(null);
-    const isDragging = useRef(false);
-    const rafRef = useRef<number | null>(null);
-
-    const calcValue = (clientX: number) => {
-      if (!sliderRef.current) return value;
-      const rect = sliderRef.current.getBoundingClientRect();
-      const percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-      const raw = min + percent * (max - min);
-      return Math.max(min, Math.min(max, Math.round(raw / step) * step));
-    };
-
-    const handleInteraction = (clientX: number) => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = requestAnimationFrame(() => {
-        onChange(calcValue(clientX));
-      });
-    };
-
-    const handleTouchMove = (e: React.TouchEvent) => {
-      e.preventDefault();
-      handleInteraction(e.touches[0].clientX);
-    };
-
-    const handleTouchStart = (e: React.TouchEvent) => {
-      isDragging.current = true;
-      handleInteraction(e.touches[0].clientX);
-    };
-
-    const handleMouseDown = (e: React.MouseEvent) => {
-      isDragging.current = true;
-      handleInteraction(e.clientX);
-
-      const handleMouseMove = (e: MouseEvent) => {
-        if (isDragging.current) handleInteraction(e.clientX);
-      };
-
-      const handleMouseUp = () => {
-        isDragging.current = false;
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
-      };
-
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    };
-
     return (
-      <div
-        ref={sliderRef}
-        className="relative h-14 md:h-12 flex items-center cursor-pointer touch-none select-none py-2"
-        onMouseDown={handleMouseDown}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-      >
-        {/* Track background */}
-        <div className="absolute w-full h-2.5 md:h-2 bg-pearl rounded-full" />
-
-        {/* Track fill */}
-        <div
-          className="absolute h-2.5 md:h-2 bg-gold rounded-full"
-          style={{ width: `${percentage}%`, transition: 'width 0.05s linear' }}
-        />
-
-        {/* Thumb */}
-        <div
-          className="absolute w-10 h-10 md:w-8 md:h-8 bg-gold rounded-full border-4 border-white shadow-lg transform -translate-x-1/2 active:scale-110 hover:scale-105"
-          style={{ left: `${percentage}%`, transition: 'left 0.05s linear, transform 0.15s ease' }}
-        />
-
-        {/* Hidden input for accessibility */}
+      <div className="py-3">
         <input
           id={id}
           type="range"
@@ -263,7 +193,6 @@ export default function CalculatorPage() {
           step={step}
           value={value}
           onChange={(e) => onChange(Number(e.target.value))}
-          className="sr-only"
           aria-label={id}
         />
       </div>
