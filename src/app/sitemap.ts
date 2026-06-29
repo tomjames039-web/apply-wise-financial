@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 
-const BASE_URL = "https://same-eoepuy05oil-latest.netlify.app";
+const BASE_URL = "https://www.apply-wise.co.uk";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const currentDate = new Date().toISOString();

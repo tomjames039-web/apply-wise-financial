@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description:
       "Expert mortgage advice, tips and insights to help you make informed decisions about your property journey.",
     type: "website",
-    url: "https://same-eoepuy05oil-latest.netlify.app/blog",
+    url: "https://www.apply-wise.co.uk/blog",
   },
   twitter: {
     card: "summary_large_image",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
       "Expert mortgage advice, tips and insights from Apply Wise Financial.",
   },
   alternates: {
-    canonical: "https://same-eoepuy05oil-latest.netlify.app/blog",
+    canonical: "https://www.apply-wise.co.uk/blog",
   },
 };
 

@@ -10,7 +10,7 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const siteUrl = "https://same-eoepuy05oil-latest.netlify.app";
+const siteUrl = "https://www.apply-wise.co.uk";
 
 export const viewport: Viewport = {
   width: "device-width",
