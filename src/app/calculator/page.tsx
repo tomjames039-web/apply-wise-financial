@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Header } from "@/components/Header";
@@ -167,7 +167,7 @@ export default function CalculatorPage() {
     }).format(Number(value));
   };
 
-  // Native range slider — smooth, browser-handled drag
+  // Custom mobile-friendly slider component
   const Slider = ({
     id,
     value,
@@ -183,20 +183,69 @@ export default function CalculatorPage() {
     step: number;
     onChange: (value: number) => void;
   }) => {
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(Number(e.target.value));
+    const percentage = ((value - min) / (max - min)) * 100;
+    const sliderRef = useRef<HTMLDivElement>(null);
+
+    const handleInteraction = (clientX: number) => {
+      if (!sliderRef.current) return;
+      const rect = sliderRef.current.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const width = rect.width;
+      const percent = Math.max(0, Math.min(1, x / width));
+      const newValue = min + percent * (max - min);
+      const steppedValue = Math.round(newValue / step) * step;
+      onChange(Math.max(min, Math.min(max, steppedValue)));
     };
-    const handleTouchMove = (e: React.TouchEvent<HTMLInputElement>) => {
-      // iOS Safari fix — range inputs don't fire onChange during touch drag
-      const input = e.currentTarget;
-      const touch = e.touches[0];
-      const rect = input.getBoundingClientRect();
-      const pct = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
-      const newVal = Math.round((min + pct * (max - min)) / step) * step;
-      onChange(Math.max(min, Math.min(max, newVal)));
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+      e.preventDefault();
+      handleInteraction(e.touches[0].clientX);
     };
+
+    const handleTouchStart = (e: React.TouchEvent) => {
+      handleInteraction(e.touches[0].clientX);
+    };
+
+    const handleMouseDown = (e: React.MouseEvent) => {
+      handleInteraction(e.clientX);
+
+      const handleMouseMove = (e: MouseEvent) => {
+        handleInteraction(e.clientX);
+      };
+
+      const handleMouseUp = () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    };
+
     return (
-      <div className="py-3">
+      <div
+        ref={sliderRef}
+        className="relative h-14 md:h-12 flex items-center cursor-pointer touch-none select-none py-2"
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+      >
+        {/* Track background */}
+        <div className="absolute w-full h-2.5 md:h-2 bg-pearl rounded-full" />
+
+        {/* Track fill */}
+        <div
+          className="absolute h-2.5 md:h-2 bg-gold rounded-full"
+          style={{ width: `${percentage}%` }}
+        />
+
+        {/* Thumb - larger on mobile for easier touch */}
+        <div
+          className="absolute w-10 h-10 md:w-8 md:h-8 bg-gold rounded-full border-4 border-white shadow-lg transform -translate-x-1/2 transition-transform active:scale-110 hover:scale-105"
+          style={{ left: `${percentage}%` }}
+        />
+
+        {/* Hidden input for accessibility */}
         <input
           id={id}
           type="range"
@@ -204,8 +253,8 @@ export default function CalculatorPage() {
           max={max}
           step={step}
           value={value}
-          onChange={handleChange}
-          onTouchMove={handleTouchMove}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="sr-only"
           aria-label={id}
         />
       </div>
