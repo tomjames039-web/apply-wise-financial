@@ -198,7 +198,6 @@ export default function CalculatorPage() {
     };
 
     const handleTouchMove = (e: React.TouchEvent) => {
-      e.preventDefault();
       handleInteraction(e.touches[0].clientX);
     };
 
@@ -225,7 +224,7 @@ export default function CalculatorPage() {
     return (
       <div
         ref={sliderRef}
-        className="relative h-14 md:h-12 flex items-center cursor-pointer touch-none select-none py-2"
+        className="relative h-14 md:h-12 flex items-center cursor-pointer select-none py-2"
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -476,7 +475,7 @@ export default function CalculatorPage() {
                             animate={{ scale: 1, color: "#0B1F3A" }}
                             transition={{ duration: 0.3 }}
                           >
-                            {interestRate}%
+                            {Number(interestRate).toFixed(1)}%
                           </motion.span>
                         </div>
                         <Slider
