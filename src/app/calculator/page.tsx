@@ -183,6 +183,18 @@ export default function CalculatorPage() {
     step: number;
     onChange: (value: number) => void;
   }) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChange(Number(e.target.value));
+    };
+    const handleTouchMove = (e: React.TouchEvent<HTMLInputElement>) => {
+      // iOS Safari fix — range inputs don't fire onChange during touch drag
+      const input = e.currentTarget;
+      const touch = e.touches[0];
+      const rect = input.getBoundingClientRect();
+      const pct = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
+      const newVal = Math.round((min + pct * (max - min)) / step) * step;
+      onChange(Math.max(min, Math.min(max, newVal)));
+    };
     return (
       <div className="py-3">
         <input
@@ -192,7 +204,8 @@ export default function CalculatorPage() {
           max={max}
           step={step}
           value={value}
-          onChange={(e) => onChange(Number(e.target.value))}
+          onChange={handleChange}
+          onTouchMove={handleTouchMove}
           aria-label={id}
         />
       </div>

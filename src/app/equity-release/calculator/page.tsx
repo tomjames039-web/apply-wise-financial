@@ -154,7 +154,7 @@ export default function EquityReleaseCalculatorPage() {
                         min={55}
                         max={90}
                         value={age}
-                        onChange={(e) => setAge(Number(e.target.value))}
+                        onChange={(e) => setAge(Number(e.target.value))} onTouchMove={(e) => { const r=e.currentTarget.getBoundingClientRect(); const p=Math.max(0,Math.min(1,(e.touches[0].clientX-r.left)/r.width)); const min=Number(e.currentTarget.min); const max=Number(e.currentTarget.max); const step=Number(e.currentTarget.step)||1; setAge(Math.max(min,Math.min(max,Math.round((min+p*(max-min))/step)*step))); }}
                         className="w-full cursor-pointer"
                       />
                       <div className="flex justify-between text-xs text-navy/40 mt-1">
@@ -173,7 +173,7 @@ export default function EquityReleaseCalculatorPage() {
                         min={0}
                         max={90}
                         value={partnerAge}
-                        onChange={(e) => setPartnerAge(Number(e.target.value))}
+                        onChange={(e) => setPartnerAge(Number(e.target.value))} onTouchMove={(e) => { const r=e.currentTarget.getBoundingClientRect(); const p=Math.max(0,Math.min(1,(e.touches[0].clientX-r.left)/r.width)); const min=Number(e.currentTarget.min); const max=Number(e.currentTarget.max); const step=Number(e.currentTarget.step)||1; setPartnerAge(Math.max(min,Math.min(max,Math.round((min+p*(max-min))/step)*step))); }}
                         className="w-full cursor-pointer"
                       />
                       <p className="text-xs text-navy/40 mt-1">Set to 0 if single applicant</p>
@@ -240,7 +240,7 @@ export default function EquityReleaseCalculatorPage() {
                         max={2000000}
                         step={10000}
                         value={propertyValue}
-                        onChange={(e) => setPropertyValue(Number(e.target.value))}
+                        onChange={(e) => setPropertyValue(Number(e.target.value))} onTouchMove={(e) => { const r=e.currentTarget.getBoundingClientRect(); const p=Math.max(0,Math.min(1,(e.touches[0].clientX-r.left)/r.width)); const min=Number(e.currentTarget.min); const max=Number(e.currentTarget.max); const step=Number(e.currentTarget.step)||1; setPropertyValue(Math.max(min,Math.min(max,Math.round((min+p*(max-min))/step)*step))); }}
                         className="w-full cursor-pointer"
                       />
                       <div className="flex justify-between text-xs text-navy/40 mt-1">
@@ -260,7 +260,7 @@ export default function EquityReleaseCalculatorPage() {
                         max={propertyValue * 0.5}
                         step={1000}
                         value={outstandingMortgage}
-                        onChange={(e) => setOutstandingMortgage(Number(e.target.value))}
+                        onChange={(e) => setOutstandingMortgage(Number(e.target.value))} onTouchMove={(e) => { const r=e.currentTarget.getBoundingClientRect(); const p=Math.max(0,Math.min(1,(e.touches[0].clientX-r.left)/r.width)); const min=Number(e.currentTarget.min); const max=Number(e.currentTarget.max); const step=Number(e.currentTarget.step)||1; setOutstandingMortgage(Math.max(min,Math.min(max,Math.round((min+p*(max-min))/step)*step))); }}
                         className="w-full cursor-pointer"
                       />
                       <p className="text-xs text-navy/40 mt-1">This will be paid off from your release</p>
@@ -317,7 +317,7 @@ export default function EquityReleaseCalculatorPage() {
                           max={calculations.netRelease}
                           step={5000}
                           value={Math.min(initialDrawdown, calculations.netRelease)}
-                          onChange={(e) => setInitialDrawdown(Number(e.target.value))}
+                          onChange={(e) => setInitialDrawdown(Number(e.target.value))} onTouchMove={(e) => { const r=e.currentTarget.getBoundingClientRect(); const p=Math.max(0,Math.min(1,(e.touches[0].clientX-r.left)/r.width)); const min=Number(e.currentTarget.min); const max=Number(e.currentTarget.max); const step=Number(e.currentTarget.step)||1; setInitialDrawdown(Math.max(min,Math.min(max,Math.round((min+p*(max-min))/step)*step))); }}
                           className="w-full cursor-pointer"
                         />
                       </div>
@@ -334,7 +334,7 @@ export default function EquityReleaseCalculatorPage() {
                         max={9}
                         step={0.1}
                         value={interestRate}
-                        onChange={(e) => setInterestRate(Number(e.target.value))}
+                        onChange={(e) => setInterestRate(Number(e.target.value))} onTouchMove={(e) => { const r=e.currentTarget.getBoundingClientRect(); const p=Math.max(0,Math.min(1,(e.touches[0].clientX-r.left)/r.width)); const min=Number(e.currentTarget.min); const max=Number(e.currentTarget.max); const step=Number(e.currentTarget.step)||1; setInterestRate(Math.max(min,Math.min(max,Math.round((min+p*(max-min))/step)*step))); }}
                         className="w-full cursor-pointer"
                       />
                       <p className="text-xs text-navy/40 mt-1">Current rates typically 5.5% - 7.5%</p>
