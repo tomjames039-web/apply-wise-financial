@@ -289,7 +289,7 @@ export default function ProductTransferPage() {
                         step="10000"
                         value={mortgageBalance}
                         onChange={(e) => setMortgageBalance(Number(e.target.value))}
-                        className="w-full h-2.5 md:h-2 bg-gray-200 rounded-full cursor-pointer touch-none"
+                        className="w-full cursor-pointer"
                       />
                       <div className="flex justify-between text-xs text-gray-400 mt-2">
                         <span>£50k</span>
@@ -309,7 +309,7 @@ export default function ProductTransferPage() {
                         step="0.1"
                         value={currentRate}
                         onChange={(e) => setCurrentRate(Number(e.target.value))}
-                        className="w-full h-2.5 md:h-2 bg-gray-200 rounded-full cursor-pointer touch-none"
+                        className="w-full cursor-pointer"
                       />
                       <div className="flex justify-between text-xs text-gray-400 mt-2">
                         <span>3%</span>
@@ -329,7 +329,7 @@ export default function ProductTransferPage() {
                         step="0.01"
                         value={newRate}
                         onChange={(e) => setNewRate(Number(e.target.value))}
-                        className="w-full h-2.5 md:h-2 bg-gray-200 rounded-full cursor-pointer touch-none"
+                        className="w-full cursor-pointer"
                       />
                       <div className="flex justify-between text-xs text-gray-400 mt-2">
                         <span>3%</span>
@@ -349,7 +349,7 @@ export default function ProductTransferPage() {
                         step="1"
                         value={term}
                         onChange={(e) => setTerm(Number(e.target.value))}
-                        className="w-full h-2.5 md:h-2 bg-gray-200 rounded-full cursor-pointer touch-none"
+                        className="w-full cursor-pointer"
                       />
                       <div className="flex justify-between text-xs text-gray-400 mt-2">
                         <span>5 yrs</span>

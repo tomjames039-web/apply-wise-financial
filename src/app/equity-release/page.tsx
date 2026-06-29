@@ -661,7 +661,7 @@ export default function EquityReleasePage() {
                         max={90}
                         value={age}
                         onChange={(e) => setAge(Number(e.target.value))}
-                        className="w-full h-2.5 md:h-2 bg-white/10 rounded-lg cursor-pointer touch-none"
+                        className="w-full cursor-pointer"
                       />
                       <div className="flex justify-between text-xs text-white/40 mt-1">
                         <span>55</span>
@@ -681,7 +681,7 @@ export default function EquityReleasePage() {
                         step={10000}
                         value={propertyValue}
                         onChange={(e) => setPropertyValue(Number(e.target.value))}
-                        className="w-full h-2.5 md:h-2 bg-white/10 rounded-lg cursor-pointer touch-none"
+                        className="w-full cursor-pointer"
                       />
                       <div className="flex justify-between text-xs text-white/40 mt-1">
                         <span>£100k</span>

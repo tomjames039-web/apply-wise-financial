@@ -155,7 +155,7 @@ export default function EquityReleaseCalculatorPage() {
                         max={90}
                         value={age}
                         onChange={(e) => setAge(Number(e.target.value))}
-                        className="w-full h-2.5 md:h-2 bg-pearl rounded-lg cursor-pointer touch-none"
+                        className="w-full cursor-pointer"
                       />
                       <div className="flex justify-between text-xs text-navy/40 mt-1">
                         <span>55</span>
@@ -174,7 +174,7 @@ export default function EquityReleaseCalculatorPage() {
                         max={90}
                         value={partnerAge}
                         onChange={(e) => setPartnerAge(Number(e.target.value))}
-                        className="w-full h-2.5 md:h-2 bg-pearl rounded-lg cursor-pointer touch-none"
+                        className="w-full cursor-pointer"
                       />
                       <p className="text-xs text-navy/40 mt-1">Set to 0 if single applicant</p>
                     </div>
@@ -241,7 +241,7 @@ export default function EquityReleaseCalculatorPage() {
                         step={10000}
                         value={propertyValue}
                         onChange={(e) => setPropertyValue(Number(e.target.value))}
-                        className="w-full h-2.5 md:h-2 bg-pearl rounded-lg cursor-pointer touch-none"
+                        className="w-full cursor-pointer"
                       />
                       <div className="flex justify-between text-xs text-navy/40 mt-1">
                         <span>£100k</span>
@@ -261,7 +261,7 @@ export default function EquityReleaseCalculatorPage() {
                         step={1000}
                         value={outstandingMortgage}
                         onChange={(e) => setOutstandingMortgage(Number(e.target.value))}
-                        className="w-full h-2.5 md:h-2 bg-pearl rounded-lg cursor-pointer touch-none"
+                        className="w-full cursor-pointer"
                       />
                       <p className="text-xs text-navy/40 mt-1">This will be paid off from your release</p>
                     </div>
@@ -318,7 +318,7 @@ export default function EquityReleaseCalculatorPage() {
                           step={5000}
                           value={Math.min(initialDrawdown, calculations.netRelease)}
                           onChange={(e) => setInitialDrawdown(Number(e.target.value))}
-                          className="w-full h-2.5 md:h-2 bg-pearl rounded-lg cursor-pointer touch-none"
+                          className="w-full cursor-pointer"
                         />
                       </div>
                     )}
@@ -335,7 +335,7 @@ export default function EquityReleaseCalculatorPage() {
                         step={0.1}
                         value={interestRate}
                         onChange={(e) => setInterestRate(Number(e.target.value))}
-                        className="w-full h-2.5 md:h-2 bg-pearl rounded-lg cursor-pointer touch-none"
+                        className="w-full cursor-pointer"
                       />
                       <p className="text-xs text-navy/40 mt-1">Current rates typically 5.5% - 7.5%</p>
                     </div>

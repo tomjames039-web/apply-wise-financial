@@ -873,7 +873,7 @@ export default function BuyToLetPage() {
                                   step={5000}
                                   value={formData.propertyValue}
                                   onChange={(e) => updateFormData("propertyValue", Number(e.target.value))}
-                                  className="w-full h-2.5 md:h-2 bg-white/10 rounded-lg cursor-pointer touch-none"
+                                  className="w-full cursor-pointer"
                                 />
                                 <div className="flex justify-between text-xs text-white/40 mt-1">
                                   <span>£75k</span>
@@ -893,7 +893,7 @@ export default function BuyToLetPage() {
                                   step={50}
                                   value={formData.expectedRent}
                                   onChange={(e) => updateFormData("expectedRent", Number(e.target.value))}
-                                  className="w-full h-2.5 md:h-2 bg-white/10 rounded-lg cursor-pointer touch-none"
+                                  className="w-full cursor-pointer"
                                 />
                                 <div className="flex justify-between text-xs text-white/40 mt-1">
                                   <span>£400</span>
@@ -913,7 +913,7 @@ export default function BuyToLetPage() {
                                   step={5000}
                                   value={Math.min(formData.deposit, formData.propertyValue * 0.6)}
                                   onChange={(e) => updateFormData("deposit", Number(e.target.value))}
-                                  className="w-full h-2.5 md:h-2 bg-white/10 rounded-lg cursor-pointer touch-none"
+                                  className="w-full cursor-pointer"
                                 />
                                 <div className="flex justify-between text-xs text-white/40 mt-1">
                                   <span>15%</span>
